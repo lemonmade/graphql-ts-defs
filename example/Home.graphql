@@ -1,0 +1,21 @@
+query Home($someVariable: ProductInput, $another: Int!) {
+  shop {
+    onlineStoreChannel: channelByHandle(handle: "online_store") {
+      name
+    }
+  }
+  staffMember {
+    firstName
+    privateData {
+      simpleCards: cards(acceptLayout: SIMPLE) {
+        ...SimpleCard
+        ...on HomeContentCard {
+          category
+          image {
+            src
+          } 
+        }
+      }
+    }
+  }
+}

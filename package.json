@@ -1,0 +1,27 @@
+{
+  "name": "graphql-ts-defs",
+  "version": "0.0.1",
+  "main": "index.js",
+  "author": "Chris Sauve <chrismsauve@gmail.com>",
+  "license": "MIT",
+  "scripts": {
+    "test": "jest --config ./config/jest/config.json",
+    "test:watch": "yarn run test -- --watch"
+  },
+  "devDependencies": {
+    "@types/jest": "^19.2.2",
+    "jest": "^19.0.2",
+    "ts-jest": "^19.0.1",
+    "ts-node": "^2.1.0",
+    "typescript": "^2.2.1"
+  },
+  "dependencies": {
+    "@types/fs-extra": "^2.0.0",
+    "@types/glob": "^5.0.30",
+    "@types/graphql": "^0.8.6",
+    "apollo-codegen": "^0.10.9",
+    "fs-extra": "^2.1.1",
+    "glob": "^7.1.1",
+    "graphql": "^0.9.1"
+  }
+}
