@@ -6,7 +6,7 @@ import {
   GraphQLInputObjectType,
   GraphQLType,
 } from 'graphql';
-import {Operation, Context} from 'apollo-codegen';
+import {Operation, Fragment, Context} from 'apollo-codegen';
 
 import CodeGenerator from './generator';
 import {propertiesFromFields, Type, Property, Interface} from './ast';
@@ -17,9 +17,50 @@ interface ImportMap {
   [key: string]: string[],
 }
 
+interface File {
+  path: string,
+  operation?: Operation,
+  fragment?: Fragment,
+}
+
+export function printFile(
+  generator: CodeGenerator,
+  {operation, fragment}: File,
+  context: Context,
+) {
+  if (operation == null && fragment == null) {
+    return '';
+  }
+
+  generator.printOnNewline('// This file was generated and should not be edited.');
+  generator.printOnNewline('// tslint-disable');
+  generator.printNewline();
+  generator.printOnNewline("import {DocumentNode} from 'graphql';");
+  generator.printNewline();
+
+  if (operation != null) {
+    printImportsForOperation(generator, operation, context);
+    printVariablesInterfaceFromOperation(generator, operation, context);
+    printInterfaceFromOperation(generator, operation, context);
+  }
+
+  if (fragment != null) {
+    printImportsForOperation(generator, fragment, context);
+    printInterfaceFromFragment(generator, fragment, context);
+  }
+
+  generator.printOnNewline('declare const document: DocumentNode;');
+  generator.printOnNewline('export default document;');
+  generator.printNewline();
+
+  generator.printOnNewline('// tslint-enable');
+
+  return generator.output;
+}
+
 export function printImportsForOperation(
   generator: CodeGenerator,
-  {fragmentsReferenced, filePath}: Operation,
+  {fragmentsReferenced, filePath}: Operation | Fragment,
   context: Context,
 ) {
   const fragmentImports = fragmentsReferenced.reduce((imports: ImportMap, fragmentName) => {
@@ -122,6 +163,29 @@ export function printGraphQLType(
     generator.print(';');
     generator.printNewline();
   }
+}
+
+export function printInterfaceFromFragment(
+  generator: CodeGenerator,
+  fragment: Fragment,
+  context: Context,
+) {
+  const {
+    fragmentName,
+    fields,
+    fragmentSpreads,
+  } = fragment;
+
+  printExport(generator, () => {
+    printInterface(generator, {
+      name: fragmentName,
+      extend: fragmentSpreads,
+    }, () => {
+      propertiesFromFields(context, fields).forEach((property) => printProperty(generator, property));
+    });
+  });
+
+  generator.printNewline();
 }
 
 export function printInterfaceFromOperation(generator: CodeGenerator, operation: Operation, context: Context) {

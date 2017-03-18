@@ -1,4 +1,5 @@
 import {resolve} from 'path';
+
 import graphQLToTypeScriptDefinitions from '../src';
 
 const schemaFile = resolve(__dirname, 'schema.json');
@@ -7,7 +8,7 @@ const graphQLFiles = [
   resolve(__dirname, 'SimpleCard.graphql'),
 ];
 
-console.log(graphQLToTypeScriptDefinitions({
+graphQLToTypeScriptDefinitions({
   schemaFile,
   graphQLFiles,
-}));
+});
