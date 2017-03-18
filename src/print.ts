@@ -90,7 +90,7 @@ export function printVariablesInterfaceFromOperation(
     printInterface(generator, {
       name: `${operationName}Variables`,
     }, () => {
-      propertiesFromFields(context, variables, null, true).forEach((property) => printProperty(generator, property));
+      propertiesFromFields(context, variables as any, undefined, true).forEach((property) => printProperty(generator, property));
     });
   });
 
@@ -107,7 +107,7 @@ export function printGraphQLType(
   if (type instanceof GraphQLInputObjectType) {
     printInterface(generator, {name}, () => {
       const fields = type.getFields();
-      propertiesFromFields(context, Object.keys(fields).map((fieldName) => fields[fieldName]), null, true).forEach((property) => {
+      propertiesFromFields(context, (Object.keys(fields) as any).map((fieldName: any) => fields[fieldName]), undefined, true).forEach((property) => {
         printProperty(generator, property);
       });
     });
@@ -124,7 +124,7 @@ export function printGraphQLType(
   }
 }
 
-export function printInterfaceFromOperation(generator: CodeGenerator, operation: Operation, context) {
+export function printInterfaceFromOperation(generator: CodeGenerator, operation: Operation, context: Context) {
   const {
     operationName,
     fields,

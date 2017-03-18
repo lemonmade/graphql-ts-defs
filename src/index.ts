@@ -13,9 +13,9 @@ export default function graphQLToTypeScriptDefinitions(options: Options) {
   generator.printOnNewline('// tslint-disable');
   generator.printNewline();
 
-  printImportsForOperation(generator, context.operations.HomeQuery, context);
-  printVariablesInterfaceFromOperation(generator, context.operations.HomeQuery, context);
-  printInterfaceFromOperation(generator, context.operations.HomeQuery, context);
+  printImportsForOperation(generator, context.operations.Home, context);
+  printVariablesInterfaceFromOperation(generator, context.operations.Home, context);
+  printInterfaceFromOperation(generator, context.operations.Home, context);
 
   generator.printOnNewline('export default {} as any;');
   generator.printNewline();

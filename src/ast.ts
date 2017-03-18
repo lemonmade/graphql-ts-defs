@@ -9,7 +9,6 @@ import {
   GraphQLID,
   GraphQLScalarType,
   GraphQLType,
-  GraphQLField
 } from 'graphql';
 
 import {Field, Context} from 'apollo-codegen';
@@ -32,7 +31,7 @@ export interface Interface {
   extend?: string[],
 }
 
-type AnyField = Field | GraphQLField<any, any>;
+type AnyField = Field;
 
 export function propertiesFromFields(
   context: Context,
@@ -56,7 +55,7 @@ export function propertyFromField(
     fragmentSpreads,
     fields: subFields,
     inlineFragments,
-  } = field;
+  } = field as Field & {name?: string};
   const propertyType = includeObject || isLeafType(type)
     ? typeFromGraphQLType(context, type, forceNullable)
     : {
@@ -121,7 +120,7 @@ export function typeFromGraphQLType(
     };
   } else if (type instanceof GraphQLScalarType) {
     return {
-      name: builtInScalarMap[type.name] || (context.passthroughCustomScalars ? `${context.customScalarsPrefix || ''}${type.name}` : 'string'),
+      name: builtInScalarMap[type.name] || ((context as any).passthroughCustomScalars ? `${(context as any).customScalarsPrefix || ''}${type.name}` : 'string'),
       array: false,
       nullable,
     };
